@@ -1,6 +1,10 @@
 stages:
   - build
   - test
+  - notify
+
+variables:
+  EMAIL_RECIPIENTS: "xalmonoyefule@gmail.com, xalmonoyefule@yahoo.com"
 
 build:
   stage: build
@@ -22,3 +26,13 @@ test:
   reports:
     junit:
       - target/custom-surefire-reports/*.xml
+
+notify:
+  stage: notify
+  script:
+    - echo "Sending email with Surefire reports..."
+    - echo "Sending email to $EMAIL_RECIPIENTS"
+    - mail -s "Surefire Reports" $EMAIL_RECIPIENTS < target/custom-surefire-reports/*.xml
+
+  only:
+    - master
